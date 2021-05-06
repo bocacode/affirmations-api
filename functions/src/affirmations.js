@@ -5,8 +5,12 @@ exports.getAffirmations = (req, res) => {
   const db = connectFirestore()
   db.collection('affirmations').get()
     .then(collection => {
-      const affirmationList = collection.docs.map(doc => doc.data())
-      res.set('Cache-Control', 'public, max-age=300, s-maxage=300')
+      const affirmationList = collection.docs.map(doc => {
+        let affirm = doc.data()
+        affirm.id = doc.id
+        return affirm
+      })
+      res.set('Cache-Control', 'public, max-age=60, s-maxage=60')
       res.send(affirmationList)
     })
     .catch(err => res.status(500).send('Error getting affirmations: ' + err.message))
