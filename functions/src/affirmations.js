@@ -6,6 +6,7 @@ exports.getAffirmations = (req, res) => {
   db.collection('affirmations').get()
     .then(collection => {
       const affirmationList = collection.docs.map(doc => doc.data())
+      res.set('Cache-Control', 'public, max-age=300, s-maxage=300')
       res.send(affirmationList)
     })
     .catch(err => res.status(500).send('Error getting affirmations: ' + err.message))
